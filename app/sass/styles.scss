@@ -3,10 +3,6 @@
 @import "../bower_components/bootstrap-sass/vendor/assets/stylesheets/bootstrap";
 @import "compass";
 
-body {
-  padding-top: 70px;
-}
-
 .content {
   @media (max-width: $screen-sm) {
     border-bottom: 1px solid #eee;
@@ -25,4 +21,8 @@ body {
   background-color: $state-danger-bg;
   border-color: $state-danger-border;
   margin-top: 20px;
+}
+
+.sidebar .btn {
+  margin-bottom: 20px;
 }
