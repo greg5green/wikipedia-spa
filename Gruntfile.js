@@ -59,6 +59,12 @@ module.exports = function(grunt) {
         ]
       }
     },
+    'gh-pages': {
+      options: {
+        base: 'dist'
+      },
+      src: '**/*'
+    },
     uncss: {
       dist: {
         files: {
