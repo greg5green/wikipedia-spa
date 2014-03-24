@@ -54,9 +54,14 @@
     var summaryTemplateSource = $("#summaries").html(),
       errorTemplateSource = $('#errors').html();
 
-    // Definte a helper function
+    // Definte a couple helper functions
     handlebars.registerHelper('formatTitleLink', function(title) {
       return 'http://en.wikipedia.org/wiki/' + title.replace(' ', '_');
+    });
+    handlebars.registerHelper('cleanSummary', function(summary) {
+
+      // Return our summary with empty tags removed as Wikipedia's content can be pretty messy
+      return summary.replace(/<[A-Za-z]+><\/[A-Za-z]>/g, '');
     });
 
     // Compile the templates

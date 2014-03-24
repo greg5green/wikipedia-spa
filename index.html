@@ -39,7 +39,7 @@
           </label>
         </div>
         <div class="form-group">
-          <label>Number of articles</label>
+          <label>Number of articles:</label>
           <select class="form-control" id="numberOfArticles">
             <option>1</option>
             <option>2</option>
@@ -65,7 +65,7 @@
         <h2>
           <a href="{{{formatTitleLink title}}}"{{#if openInNewWindow}} target="_blank"{{/if}}>{{title}}</a>
         </h2>
-        {{{summary}}}
+        {{{cleanSummary summary}}}
       </div>
     {{/each}}
   </script>
