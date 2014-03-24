@@ -59,9 +59,9 @@
       return 'http://en.wikipedia.org/wiki/' + title.replace(' ', '_');
     });
     handlebars.registerHelper('cleanSummary', function(summary) {
-
+console.log(summary);
       // Return our summary with empty tags removed as Wikipedia's content can be pretty messy
-      return summary.replace(/<[A-Za-z]+><\/[A-Za-z]>/g, '');
+      return summary.replace(/<[0-9A-Za-z]+><\/[0-9A-Za-z]>/g, '');
     });
 
     // Compile the templates
