@@ -7,12 +7,23 @@ module.exports = function(grunt) {
   grunt.initConfig({
     clean: ['dist/*'],
     compass: {
+      clean: {
+        options: {
+          clean: true
+        }
+      },
       dist: {
         options: {
-          sassDir: 'app/sass',
           cssDir: 'dist/stylesheets',
-          noLineComments: true,
-          outputStyle: 'compressed'
+          outputStyle: 'compressed',
+          sassDir: 'app/sass'
+        }
+      },
+      dev: {
+        options: {
+          cssDir: 'dist/stylesheets',
+          outputStyle: 'expanded',
+          sassDir: 'app/sass'
         }
       }
     },
@@ -65,20 +76,10 @@ module.exports = function(grunt) {
       },
       src: '**/*'
     },
-    uncss: {
-      dist: {
-        files: {
-          'dist/stylesheets/styles.css': ['app/index.html']
-        },
-        options : {
-          ignore: ['.summary', '.well']
-        }
-      }
-    },
     watch: {
       compass: {
         files: ['app/sass/{,*/}*.{scss,sass}'],
-        tasks: ['compass:dist'],
+        tasks: ['compass:dev'],
         options: {
           spawn: false,
           livereload: false
@@ -98,7 +99,8 @@ module.exports = function(grunt) {
     }
   });
 
-  grunt.registerTask('build', ['clean', 'compass:dist', 'copy:dist']);
-  grunt.registerTask('serve', ['compass:dist', 'copy:dist', 'connect', 'watch']);
+  grunt.registerTask('serve', ['compass:dev', 'copy:dist', 'connect', 'watch']);
+  grunt.registerTask('build', ['clean', 'compass:clean', 'compass:dist', 'copy:dist']);
+  grunt.registerTask('deploy', ['build', 'gh-pages']);
 
 };
