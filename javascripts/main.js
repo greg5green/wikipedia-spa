@@ -1,8 +1,54 @@
 ;(function($, handlebars) {
   'use strict';
 
-  var summariesTemplate,
-    errorTemplate;
+  var errorTemplate,
+    summariesTemplate;
+
+  function displayArticles(res) {
+    var summaries = [],
+      key;
+
+    // Build an array of summaries that we can pass to our templates
+    for (key in res.query.pages) {
+      if (res.query.pages.hasOwnProperty(key)) {
+        summaries.push({
+          openInNewWindow: document.getElementById('openInNewWindow').checked,
+          summary: res.query.pages[key].extract,
+          title: res.query.pages[key].title
+        });
+      }
+    }
+
+    $('.content').html(summariesTemplate({ summaries: summaries }));
+  }
+
+  function displayError() {
+    $('.content').html(errorTemplate());
+  }
+
+  function getArticles() {
+    var numberOfArticles = document.getElementById('numberOfArticles').value,
+      options = {
+        action: 'query',
+        format: 'json',
+        generator: 'random',
+        grnnamespace: '0',
+        grnlimit: numberOfArticles || 1,
+        prop: 'extracts',
+        exintro: true,
+        exlimit: numberOfArticles || 1
+      };
+
+    $.ajax({
+      cache: true,
+      data: options,
+      dataType: 'jsonp',
+      error: displayError,
+      success: displayArticles,
+      type: 'GET',
+      url: 'http://en.wikipedia.org/w/api.php'
+    });
+  }
 
   function setupTemplates() {
     var summaryTemplateSource = $("#summaries").html(),
@@ -18,60 +64,6 @@
     errorTemplate = handlebars.compile(errorTemplateSource);
   }
 
-  function getArticles(numberOfArticles, openInNewWindow) {
-    var options = {
-      action: 'query',
-      format: 'json',
-      generator: 'random',
-      grnnamespace: '0',
-      grnlimit: numberOfArticles || 1,
-      prop: 'extracts',
-      exintro: true,
-      exlimit: numberOfArticles || 1
-    };
-
-    $.ajax({
-      cache: true,
-      data: options,
-      dataType: 'jsonp',
-      error: displayError,
-      success: function(res) {
-        displayArticles(res, openInNewWindow);
-      },
-      type: 'GET',
-      url: 'http://en.wikipedia.org/w/api.php'
-    });
-  }
-
-  function displayArticles(res, openInNewWindow) {
-    var summaries = [],
-      key;
-
-    // Build an array of summaries that we can pass to our templates
-    for (key in res.query.pages) {
-      if (res.query.pages.hasOwnProperty(key)) {
-        summaries.push({
-          openInNewWindow: openInNewWindow,
-          summary: res.query.pages[key].extract,
-          title: res.query.pages[key].title
-        });
-      }
-    }
-
-    $('.content').html(summariesTemplate({ summaries: summaries }));
-  }
-
-  function displayError() {
-    $('.content').html(errorTemplate());
-  }
-
-  function refreshArticles() {
-    var numberOfArticles = document.getElementById('numberOfArticles').value,
-      openInNewWindow = document.getElementById('openInNewWindow').checked;
-
-    getArticles(numberOfArticles, openInNewWindow);
-  }
-
   $(function() {
 
     // Setup our templates
@@ -81,7 +73,7 @@
     getArticles();
 
     // Setup listener to get new articles
-    $('#refreshBtn').on('click', refreshArticles);
+    $('#refreshBtn').on('click', getArticles);
 
   });
 
